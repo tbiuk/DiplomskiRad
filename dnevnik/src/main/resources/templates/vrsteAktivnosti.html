@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>DnevnikAplikacija</title>
+
+  <!-- Custom fonts for this template-->
+  <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+  <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+
+  <!-- Custom styles for this template-->
+  <link href="css/sb-admin-2.css" rel="stylesheet">
+
+   <!-- My styles-->
+  <link href="css/style.css" rel="stylesheet">
+
+</head>
+
+<body id="page-top">
+
+  <!-- Page Wrapper -->
+  <div id="wrapper">
+
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+
+      <!-- Main Content -->
+      <div id="content">
+
+        <!-- Topbar -->
+        <nav class="navbar navbar-expand-lg navbar-dark bg-gradient-primary">
+    <a class="navbar-brand" href="#">Dnevnik aktivnosti</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarColor02">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="/pregledAktivnosti">Pregled aktivnosti </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="novaAktivnost">Nova aktivnost</a>
+        </li>
+        <li class="nav-item active">
+          <a class="nav-link" href="vrsteAktivnosti">Vrste aktivnosti <span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/kategorije">Kategorije</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/prioriteti">Prioriteti</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+        <!-- End of Topbar -->
+
+        <!-- Begin Page Content -->
+        <div class="container-fluid" style="padding: 50px; min-height:800px; display:flex; justify-content:center;" >
+        
+            <!-- Card Header - Accordion -->
+            
+            
+            
+            <div class="activity-type-container">
+            <!-- Card Content - Collapse -->
+
+						<table class="table" style="width:1400px;">
+							<thead>
+								<tr>
+									<th scope="col">Vrsta aktivnosti</th>
+									<th scope="col">Primarna grupa kategorija</th>
+									<th scope="col">Sekundarna grupa kategorija</th>
+									<th scope="col"></th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr th:each="activityType, iter: ${activityTypes}"
+									class="collapse show"
+									th:classappend="${iter.getIndex()  % 2} ? 'even-card-header' : 'odd-card-header'">
+
+									<form action="#" th:action="@{/updateActivityType}"
+										th:object=${newActivityType} method="post">
+										<input type="hidden" th:name="id" th:id="id" th:value="${activityType.id}"  />
+										<input type="hidden" th:name="name" th:id="name" th:value="${activityType.name}"  />
+
+										<td style="padding-top:20px" th:text="${activityType.name}" class="card-body"></td>
+
+									<td><select
+										class="form-control primary-category-group-select"
+										id="tempPrimaryCategoryGroupId"
+										name="tempPrimaryCategoryGroupId"
+										th:value="${activityType.primaryCategoryGroup != null} ? ${activityType.primaryCategoryGroup.id} : '0'">
+											<option value="0">Nema</option>
+											<option th:each="categoryGroup: ${PrimaryCategoryGroups}"
+												th:value="${categoryGroup.id}"
+												th:text="${categoryGroup.name}"></option>
+									</select></td>
+
+									<td><select
+										class="form-control secondary-category-group-select"
+										id="tempSecondaryCategoryGroupId"
+										name="tempSecondaryCategoryGroupId"
+										th:value="${activityType.secondaryCategoryGroup != null} ? ${activityType.secondaryCategoryGroup.id} : '0'">
+											<option value="0">Nema</option>
+											<option th:each="categoryGroup: ${SecondryCategoryGroups}"
+												th:value="${categoryGroup.id}"
+												th:text="${categoryGroup.name}"></option>
+									</select></td>
+
+									<td><a
+										th:href="@{'/deleteActivityType/' + ${activityType.id}}"
+										class="far fa-trash-alt" style="padding-top: 6px; font-size: 25px; margin-right:10px;"></a>
+										<button type="submit"
+											class="link-button">
+											<div class="far fa-save" style="font-size: 25px;"></div>
+										</button></td>
+									</form>
+								</tr>
+
+								<tr class="collapse show" style="background-color: #DEDEDE">
+
+									<form action="#" th:action="@{/updateActivityType}"
+										th:object=${newActivityType} method="post">
+										<td><input class="form-control" type="text" th:name="name" th:id="name"
+											th:field="*{name}" /></td>
+										<td><select
+											class="form-control primary-category-group-select"
+											id="tempPrimaryCategoryGroupId"
+											name="tempPrimaryCategoryGroupId" value="0">
+												<option value="0">Odaberi primarnu grupu kategorija</option>
+												<option th:each="categoryGroup: ${PrimaryCategoryGroups}"
+													th:value="${categoryGroup.id}"
+													th:text="${categoryGroup.name}"></option>
+										</select></td>
+
+										<td><select
+											class="form-control secondary-category-group-select"
+											id="tempSecondaryCategoryGroupId"
+											name="tempSecondaryCategoryGroupId" th:value="0">
+												<option value="0">Odaberi sekundarnu grupu kategorija</option>
+												<option th:each="categoryGroup: ${SecondryCategoryGroups}"
+													th:value="${categoryGroup.id}"
+													th:text="${categoryGroup.name}"></option>
+										</select></td>
+
+										<td>
+											<button class="button" type="submit">Dodaj novu</button>
+										</td>
+									</form>
+								</tr>
+
+							</tbody>
+						</table>
+
+            </div>
+            
+        
+        </div>
+        <!-- /.container-fluid -->
+
+      </div>
+      <!-- End of Main Content -->
+
+
+    </div>
+    <!-- End of Content Wrapper -->
+
+  </div>
+  <!-- End of Page Wrapper -->
+
+  <!-- Scroll to Top Button-->
+  <a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+  </a>
+
+  <!-- Bootstrap core JavaScript-->
+  <script src="vendor/jquery/jquery.min.js"></script>
+  <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Core plugin JavaScript-->
+  <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+
+  <!-- Custom scripts for all pages-->
+  <script src="js/sb-admin-2.min.js"></script>
+
+  <!-- Page level plugins -->
+  <script src="vendor/chart.js/Chart.min.js"></script>
+
+  <!-- Page level custom scripts -->
+  <script src="js/demo/chart-area-demo.js"></script>
+  <script src="js/demo/chart-pie-demo.js"></script>
+  
+  
+  <script th:inline="javascript">
+		$(document).ready(function(){
+			var primaryCategoryGroup = document.getElementsByClassName("primary-category-group-select");
+			for (var i = 0; i < primaryCategoryGroup.length; i++) {
+				$(primaryCategoryGroup[i]).val(primaryCategoryGroup[i].getAttribute('value')).change();
+			}
+			
+			var secondaryCategoryGroup = document.getElementsByClassName("secondary-category-group-select");
+			for (var i = 0; i < secondaryCategoryGroup.length; i++) {
+				$(secondaryCategoryGroup[i]).val(secondaryCategoryGroup[i].getAttribute('value')).change();
+			}
+			
+		});
+	</script>
+</body>
+
+</html>

@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+  <meta charset="utf-8"/>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+  <meta name="description" content=""/>
+  <meta name="author" content=""/>
+
+  <title>DnevnikAplikacija</title>
+  
+    <!-- Bootstrap core JavaScript-->
+  <script src="vendor/jquery/jquery.min.js"></script>
+  <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Core plugin JavaScript-->
+  <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+
+  <!-- Custom scripts for all pages-->
+  <script src="js/sb-admin-2.min.js"></script>
+
+  <!-- Page level plugins -->
+  <script src="vendor/chart.js/Chart.min.js"></script>
+  <script src="vendor/datatables/jquery.dataTables.min.js"></script>
+  <script src="vendor/datatables/dataTables.bootstrap4.min.js"></script>
+
+  <!-- Page level custom scripts -->
+  <script src="js/demo/chart-area-demo.js"></script>
+  <script src="js/demo/chart-pie-demo.js"></script>
+  <script src="js/demo/datatables-demo.js"></script>
+
+  <!-- Custom fonts for this template-->
+  <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+  <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+
+  <!-- Custom styles for this template-->
+  <link href="css/sb-admin-2.css" rel="stylesheet"/>
+  
+  <!-- Custom styles for this page -->
+  <link href="vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet"/>
+
+   <!-- My styles-->
+  <link href="css/style.css" rel="stylesheet"/>
+  
+  <script th:inline="javascript">
+		$(document).ready(function(){
+			var repetition = document.getElementsByClassName("repetition-select");
+			for (var i = 0; i < repetition.length; i++) {
+				$(repetition[i]).val(repetition[i].getAttribute('value')).change();
+			}
+			
+			var priority = document.getElementsByClassName("priority-select");
+			for (var i = 0; i < priority.length; i++) {
+				$(priority[i]).val(priority[i].getAttribute('value')).change();
+			}
+			
+			var primaryGroup = document.getElementsByClassName("primary-group-options");
+			for (var i = 0; i < primaryGroup.length; i++) {
+				$(primaryGroup[i]).val(primaryGroup[i].getAttribute('value')).change();
+			}
+			
+			var secondaryGroup = document.getElementsByClassName("secondary-group-options");
+			for (var i = 0; i < secondaryGroup.length; i++) {
+				$(secondaryGroup[i]).val(secondaryGroup[i].getAttribute('value')).change();
+			}
+			
+			var activityType = document.getElementsByClassName("activity-type-option");
+			for (var i = 0; i < activityType.length; i++) {
+				$(activityType[i]).val(activityType[i].getAttribute('value')).change();
+			}
+			
+			var filterActivityType = document.getElementById("filterVrstaAktivnostiSelect");
+			$(filterActivityType).val(filterActivityType.getAttribute('value')).change();
+			
+			
+			
+		});
+	</script>
+
+</head>
+
+<body id="page-top">
+
+<!-- Topbar -->
+        <nav class="navbar navbar-expand-lg navbar-dark bg-gradient-primary">
+    <a class="navbar-brand" href="#">Dnevnik aktivnosti</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarColor02">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item active">
+          <a class="nav-link" href="/pregledAktivnosti">Pregled aktivnosti <span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="novaAktivnost">Nova aktivnost</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="vrsteAktivnosti">Vrste aktivnosti</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/kategorije">Kategorije</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/prioriteti">Prioriteti</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Page Wrapper -->
+  <div id="wrapper">
+
+    <!-- Sidebar -->
+    <div class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+      
+      <!-- Divider -->
+      <hr class="sidebar-divider">
+      <form action="#" th:action="@{/changeFilterOptions}" th:object="${filterOptions}" method="post">
+      <input type="hidden" th:field="*{id}"  />
+      <!-- Nav Item - Prikaz aktivnosti bez datuma -->
+      <div class=" mr-auto ml-md-3 my-2 my-md-0">
+        <input type="checkbox" id="showWithoutDate" name="showWithoutDate" th:field="*{showWithoutDate}">
+        <label class="sidebar-label .nav-item" for="showWithoutDate"> Prikaži aktivnosti bez datuma</label><br>
+      </div>
+
+      <!-- Nav Item - Prikaz aktivnosti sa datumom -->
+      <div class=" mr-auto ml-md-3 my-2 my-md-0">
+        <input type="checkbox" id="showWithDate" name="showWithDate" th:field="*{showWithDate}">
+        <label class="sidebar-label .nav-item" for="showWithDate"> Prikaži aktivnosti sa datumom</label><br>
+      </div>
+
+
+
+      <!-- Nav Item - Unos datuma početka -->
+      <div class=" mr-auto ml-md-3 my-2 my-md-0">
+        <label class="sidebar-label" for="birthday">Planirani datum početka:</label>
+      </div>
+      <div class=" mr-auto ml-md-3 my-2 my-md-0">
+        <label class="sidebar-label" for="birthday">od:</label>
+        <input type="date" id="minStartDate" name="minStartDate" th:field="*{minStartDate}" >
+      </div>
+      <div class=" mr-auto ml-md-3 my-2 my-md-0">
+        <label class="sidebar-label" for="birthday">do:</label>
+        <input type="date" id="maxStartDate" name="maxStartDate" th:field="*{maxStartDate}" >
+      </div>
+
+      <!-- Divider -->
+      <hr class="sidebar-divider">
+
+      <!-- Nav Item - Unos datuma završetka -->
+      <div class=" mr-auto ml-md-3 my-2 my-md-0">
+        <label class="sidebar-label" for="birthday">Planirani datum završetka:</label>
+      </div>
+      <div class=" mr-auto ml-md-3 my-2 my-md-0">
+        <label class="sidebar-label" for="birthday">od:</label>
+        <input type="date" id="minEndDate" name="minEndDate" th:field="*{minEndDate}" >
+      </div>
+      <div class=" mr-auto ml-md-3 my-2 my-md-0">
+        <label class="sidebar-label" for="birthday">do:</label>
+        <input type="date" id="maxEndDate" name="maxEndDate" th:field="*{maxEndDate}" >
+      </div>
+
+      <!-- Divider -->
+      <hr class="sidebar-divider">
+      
+      <!-- Nav Item - Ponavljanje aktivnosti -->
+      <div class=" mr-auto ml-md-3 my-2 my-md-0">
+      <label class="sidebar-label" for="male">Završenost aktivnosti:</label><br>
+      	<div th:each="model : ${T(com.domain.enums.IsRepeatable).values()}">
+                <input type="radio" th:field="*{repetition}" th:value="${model}">
+                <label class="sidebar-label" th:for="${#ids.prev('repetition')}" th:text="${model}">model</label>
+      	</div>
+      </div>
+
+      <!-- Divider -->
+      <hr class="sidebar-divider">
+      
+      <!-- Nav Item - Završenost aktivnosti -->
+      <div class=" mr-auto ml-md-3 my-2 my-md-0">
+      <label class="sidebar-label" for="male">Ponavljanje aktivnosti:</label><br>
+      	<div th:each="model : ${T(com.domain.enums.IsCompleted).values()}">
+                <input type="radio" th:field="*{completion}" th:value="${model}">
+                <label class="sidebar-label" th:for="${#ids.prev('completion')}" th:text="${model}">model</label>
+      	</div>
+      </div>
+
+      <!-- Divider -->
+      <hr class="sidebar-divider">
+
+      <!-- Nav Item - Prioritet -->
+      <div class=" mr-auto ml-md-3 my-2 my-md-0">
+        <label class="sidebar-label" for="male">Prioritet:</label><br>
+        
+
+        <input type="checkbox" id="showWithoutPriority" name="showWithoutPriority" th:field="*{showWithoutPriority}">
+        <label class="sidebar-label .nav-item" for="showWithoutPriority"> Prikaži aktivnosti bez prioriteta</label><br>
+        
+        <input type="checkbox" id="showWithPriority" name="showWithPriority" th:field="*{showWithPriority}">
+        <label class="sidebar-label .nav-item" for="showWithPriority"> Prikaži aktivnosti sa prioritetom</label><br>
+
+        <label class="sidebar-label" for="cars" style="padding-right:4px">min:</label>
+        <select id="minPrioritet" name="minPrioritet" th:field="*{minPriorityValue}">
+          <option th:each="priority: ${filterOptions.priorities}" th:value="${priority.value}" th:text="${priority.name}"></option>
+        </select><br>
+        
+        <label class="sidebar-label" for="cars">max:</label>
+        <select id="maxPrioritet" name="maxPrioritet" th:field="*{maxPriorityValue}">
+          <option th:each="priority: ${filterOptions.priorities}" th:value="${priority.value}" th:text="${priority.name}"></option>
+        </select><br>
+
+      </div>
+      
+      <!-- Divider -->
+      <hr class="sidebar-divider">
+      
+      <div class=" mr-auto ml-md-3 my-2 my-md-0">
+        <label class="sidebar-label" for="male">Vrste aktivnosti:</label><br>
+        
+      <select id="filterVrstaAktivnostiSelect" th:name="tempActivityTypeId" th:value="${filterOptions.chosenActivityType != null} ? ${filterOptions.chosenActivityType.id} : '0'" text="tempActivityTypeId" >
+      	  <option value="0">Sve</option>
+          <option th:each="activityType: ${activityTypes}" th:value="${activityType.id}" th:text="${activityType.name}"></option>
+        </select>
+        
+
+
+      </div>
+
+      <!-- Divider -->
+      <hr class="sidebar-divider">
+      <button class="button btn-primary" style="margin-left:50px" type="submit">Primijeni filter</button>
+		</form>
+    </div>
+    <!-- End of Sidebar -->
+
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+
+      <!-- Main Content -->
+      <div id="content">
+  
+        <!-- End of Topbar -->
+
+        <!-- Begin Page Content -->
+        <div class="container-fluid">
+          <!-- DataTales Example -->
+          <div class="card shadow mb-4 activity-table">
+            <div class="card-header py-3">
+              <h6 class="m-0 font-weight-bold text-primary">Popis aktivnosti</h6>
+            </div>
+            <div class="card-body">
+              <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                  <thead>
+                    <tr>
+                      <th>Naziv</th>
+                      <th>Planirani datum početka</th>
+                      <th>Planirani datum završetka</th>
+                      <th>Prioritet</th>
+                      <th>Vrsta aktivnosti</th>
+                      <th>Primarna kategorija</th>
+                      <th>Sekundarna kategorija</th>
+                      <th>Prioritet value Hidden</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                  
+                  	<tr th:each="activity: ${activities}"
+                  		th:onclick="'javascript:rowClicked(\'' + ${activity.id} + '\');'">
+    						<td th:text="${activity.name}" />
+    						<td th:text="${#temporals.format(activity.currentRepetitionStartDate, 'dd.MM.yyyy HH:mm')}" />
+    						<td th:text="${#temporals.format(activity.currentRepetitionEndDate, 'dd.MM.yyyy HH:mm')}" />
+    						<td th:if="${activity.priority != null}" th:text="${activity.priority.name}" />
+    						<td th:unless="${activity.priority != null}">Nema prioritet </td>
+    						<td th:text="${activity.activityType.name}" />
+    						<td th:text="${activity.primaryCategory.name}" />
+    						<td th:text="${activity.secondaryCategory.name}" />
+    						<td th:if="${activity.priority != null}" th:text="${activity.priority.value}" />
+    						<td th:unless="${activity.priority != null}">999999</td>
+					</tr>
+					
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- /.container-fluid -->
+
+      </div>
+      <!-- End of Main Content -->
+
+      <!-- Footer -->
+      <footer class="sticky-footer bg-white">
+        <div class="container my-auto">
+          <div class="copyright text-center my-auto">
+            <span>Copyright &copy; Your Website 2020</span>
+          </div>
+        </div>
+      </footer>
+      <!-- End of Footer -->
+
+    </div>
+    <!-- End of Content Wrapper -->
+
+  </div>
+  <!-- End of Page Wrapper -->
+
+  <!-- Scroll to Top Button-->
+  <a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+  </a>
+  
+  <!-- TEMP -->
+    <!-- Modal -->
+    
+<div th:each="activity,iter: ${activities}" class="modal fade" th:classappend="'exampleModal'+${activity.id}" tabindex="-1" role="dialog" th:aria-labelledby="'exampleModalLabel'+${activity.id}" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" th:id="'exampleModalLabel'+${activity.id}" th:text="${activity.name}" ></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form action="#" th:action="@{/updateActivity}" th:object="${changedActivity}" method="post">
+        <input type="hidden" th:name="id" th:id="id" th:value="${activity.id}"  />
+  <div class="form-row">
+    
+    
+    <div class="form-group col-md-6">
+    <div class="form-group">
+      <label for="inputName">Naziv aktivnosti</label>
+      <input type="text" class="form-control" th:value="${activity.name}" name="name" id="inputName" placeholder="Naziv aktivnosti"/>
+    </div>
+    
+    <div class="form-group">
+    <label for="inputPonavljanje">Ponavljanje</label>
+      <select th:id="'inputPonavljanje'+${iter.count}" class="form-group form-control repetition-select" th:value="${activity.repetitionType}" name="repetitionType" >
+          <option value="None" th:text="Nema"></option>
+          <option value="Daily" th:text="Dnevno"></option>
+          <option value="Weekly" th:text="Tjedno"></option>
+          <option value="Monthly" th:text="Mjesečno"></option>
+          <option value="Yearly" th:text="Godišnje"></option>
+        </select>
+        
+        <div th:id="'None'+${iter.count}" class="form-group option-target" th:classappend="${#strings.equals(activity.repetitionType,'None')} ? invisible : ''">
+    		<label for="inputAddress">Zadnje ponavljanje</label>
+            <input th:id="'exampleModal'+${iter.count}" type="date" class="form-control" th:value="${activity.finalRepetitionDate}" name="finalRepetitionDate" />
+  		</div>
+       
+       <script th:inline="javascript">
+       (function(){
+    	   // Opt-in to Bootstrap functionality
+    	   $('[data-toggle="tooltip"]').tooltip();
+    	   $('[data-toggle="popover"]').popover();
+    	   // Create variables
+    	   var optionsList = document.getElementById("inputPonavljanje[[${iter.count}]]"),
+    	       allTargets = $('.option-target'),
+    	       currentOption,
+    	       currentTarget;
+    	   // Create Hide and Show Functionality
+    	   function hideShowTargets(){
+    	     allTargets.each(function(){
+    	       this.classList.remove('invisible');
+    	     });
+    	     currentOption = optionsList.value;
+    	     currentTarget = document.getElementById(currentOption+[[${iter.count}]]);
+    	     if(currentTarget){
+    	       currentTarget.classList.add('invisible');
+    	     }
+    	   }
+    	   // Add event listener
+    	   optionsList.addEventListener('change', hideShowTargets);
+    	 })();
+       </script>
+       
+       <div class="form-group">
+    		<label for="inputAddress">Planirani početak</label>
+            <input th:id="'exampleModal'+${iter}+'1'" type="datetime-local" class="form-control" th:value="${activity.startDate}" name="startDate" />
+  		</div>
+  		
+  		<div class="form-group">
+    		<label for="inputAddress">Planirani završetak</label>
+            <input th:id="'exampleModal'+${iter}+'2'" type="datetime-local" class="form-control" th:value="${activity.endDate}" th:name="endDate" />
+  		</div>
+  		
+  	<div class="form-group">	
+  		<label for="">Prioritet</label>
+        	<select class="form-group form-control priority-select" id="Prioritet" th:value="${activity.priority != null} ? ${activity.priority.id} : '0'" name="tempPriorityId">
+        	<option value="0">Nema prioritet</option>
+          	<option th:each="priority: ${filterOptions.priorities}" th:value="${priority.id}" th:text="${priority.name}"></option>
+        </select>
+    </div>
+    
+    
+    <label for="vrstaAktivnosti">Vrsta aktivnosti</label>
+      <select th:id="'vrstaAktivnostiSelect'+${iter.count}" class="form-group form-control activity-type-option" name="tempActivityTypeId" th:value="${activity.activityType.id}" text="tempActivityTypeId" >
+          <option th:each="activityType: ${activityTypes}" th:value="${activityType.id}" th:text="${activityType.name}"></option>
+        </select>
+        
+        <div th:each="activityType: ${activityTypes}" th:class="'form-group option-target2 primary-group-select ' + ${activityType.id}" th:classappend="${#strings.equals(activity.activityType.id, activityType.id)} ? '' : invisible " >
+    		<label for="inputAddress" th:text="${activityType.primaryCategoryGroup.name}"></label>
+            <select id="inputPonavljanje" class="form-group form-control primary-group-options" th:value="${activity.primaryCategory.id}" th:name="${#strings.equals(activity.activityType.id, activityType.id)} ? 'tempPrimaryCategoryId' : '' ">
+          		<option th:each="primaryCategory: ${activityType.primaryCategoryGroup.categories}" th:value="${primaryCategory.id}" th:text="${primaryCategory.name}"></option>
+        </select>
+  		</div>
+  		
+  		<div th:each="activityType: ${activityTypes}" th:class="'form-group option-target2 secondary-group-select ' + ${activityType.id}" th:classappend="${#strings.equals(activity.activityType.id, activityType.id)} ? '' : invisible ">
+    		
+    		<label for="inputAddress" th:text="${activityType.secondaryCategoryGroup != null} ? ${activityType.secondaryCategoryGroup.name} : 'Nema sekundarne kategorije'"></label>
+            <select id="inputPonavljanje" class="form-group form-control secondary-group-options" th:value="${activity.secondaryCategory.id}" th:name="${#strings.equals(activity.activityType.id, activityType.id)} ? 'tempSecondaryCategoryId' : '' ">
+          		<option th:each="secondaryCategory: ${activityType.secondaryCategoryGroup.categories}" th:value="${secondaryCategory.id}" th:text="${secondaryCategory.name}"></option>
+        </select>
+  		</div>
+       
+       <script>
+       (function(){
+    	   // Opt-in to Bootstrap functionality
+    	   $('[data-toggle="tooltip"]').tooltip();
+    	   $('[data-toggle="popover"]').popover();
+    	   // Create variables
+    	   var optionsList = document.getElementById("vrstaAktivnostiSelect[[${iter.count}]]"),
+    	       allTargets = $('.option-target2'),
+    	       currentOption,
+    	       currentTargets;
+    	   // Create Hide and Show Functionality
+    	   function hideShowTargets(){
+    		 currentOption = optionsList.value;
+        	 currentTargets = document.getElementsByClassName(currentOption);
+    	     allTargets.each(function(){
+    	       this.classList.add('invisible');
+    	       this.querySelector('.form-control').setAttribute("name", "");
+    	       if(this.classList.contains(currentOption)) {
+    	    	   this.classList.remove('invisible');
+    	    	   if(this.classList.contains('primary-group-select')) {
+    	    		   this.querySelector('.form-control').setAttribute("name", "tempPrimaryCategoryId");
+    	    	   }
+    	    	   
+    	    	   if(this.classList.contains('secondary-group-select')) {
+    	    		   this.querySelector('.form-control').setAttribute("name", "tempSecondaryCategoryId");
+    	    	   }
+    	       }
+    	     });
+    	     
+    	   }
+    	   // Add event listener
+    	   optionsList.addEventListener('change', hideShowTargets);
+    	 })();
+       </script>
+        
+        
+  <div class="form-group">
+    <div class="form-check">
+      <input class="form-check-input" type="checkbox" id="gridCheck" value="true" th:checked="${activity.status}" name="status">
+      <label class="form-check-label" for="gridCheck">
+        Završeno
+      </label>
+    </div>
+  </div>
+    
+    
+    
+    </div>
+    
+    
+    
+       
+       
+    
+  </div>
+  <div class="form-group col-md-6">
+    	<label for="formopis">Opis</label>
+        <textarea id="formopis" class="form-control" placeholder="Unesi opis aktivnosti." rows="15" th:text="${activity.description}" name="description"></textarea>
+        
+    </div>
+  </div>
+  <div class="modal-footer">
+  		<button class="btn btn-primary" th:onclick="@{'location.href=\'/deleteActivity/' + ${activity.id}} + '\''" type="button">Izbriši</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary">Spremi promjene</button>
+      </div>
+</form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+  <script th:inline="javascript">
+    function rowClicked(value) {
+
+    	$('.exampleModal' + value).first().modal();
+    }
+  </script>
+  <!-- TEMP -->
+</body>
+
+</html>

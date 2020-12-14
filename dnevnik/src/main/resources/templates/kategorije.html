@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>DnevnikAplikacija</title>
+
+  <!-- Custom fonts for this template-->
+  <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+  <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+
+  <!-- Custom styles for this template-->
+  <link href="css/sb-admin-2.css" rel="stylesheet">
+
+   <!-- My styles-->
+  <link href="css/style.css" rel="stylesheet">
+
+</head>
+
+<body id="page-top">
+
+  <!-- Page Wrapper -->
+  <div id="wrapper">
+
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+
+      <!-- Main Content -->
+      <div id="content">
+
+        <!-- Topbar -->
+        <nav class="navbar navbar-expand-lg navbar-dark bg-gradient-primary">
+    <a class="navbar-brand" href="#">Dnevnik aktivnosti</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarColor02">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="/pregledAktivnosti">Pregled aktivnosti </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="novaAktivnost">Nova aktivnost</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="vrsteAktivnosti">Vrste aktivnosti</a>
+        </li>
+        <li class="nav-item active">
+          <a class="nav-link" href="/kategorije">Kategorije <span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/prioriteti">Prioriteti</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+        <!-- End of Topbar -->
+
+        <!-- Begin Page Content -->
+        <div class="container-fluid" style="padding: 50px" >
+        
+        <table class="table" cellspacing="0">
+        <thead>
+                    <tr>
+                      <th style="text-align: center">Primarne grupe kategorija</th>
+                      <th style="text-align: center">Sekundarne grupe kategorija</th>
+                    </tr>
+                  </thead>
+        <tbody>
+        <tr>
+        <td width="50%" class="column-container" id="primary-category-column">
+          <!-- Primary Category Group Cards -->
+          <div th:each="categoryGroup: ${PrimaryCategoryGroups}" class="card shadow mb-4">
+            <!-- Card Header - Accordion -->
+            <div style="display: flex;justify-content: center;">
+            <a th:href="'#collapseCardExample'+${categoryGroup.id}" class="d-block card-header py-3" style="width:100%" data-toggle="collapse" role="button" aria-expanded="true" th:aria-controls="'collapseCardExample'+${categoryGroup.id}">
+              <div th:text="${categoryGroup.name}" class="m-0 font-weight-bold text-primary"></div>
+            </a>
+            <a th:href="@{'/deleteCategoryGroup/' + ${categoryGroup.id}}" style="padding-top:25px" class="far fa-trash-alt d-block card-header py-3"></a>
+            </div>
+            <!-- Card Content - Collapse -->
+            <div th:each="group, iter: ${categoryGroup.categories}" class="collapse show card-header" th:classappend="${iter.getIndex()  % 2} ? 'even-card-header' : 'odd-card-header'" th:id="'collapseCardExample'+${categoryGroup.id}">
+              <div th:text="${group.name}" class="card-body">
+              </div>
+              <a th:href="@{'/deleteCategory/' + ${group.id}}" class="far fa-trash-alt"></a>
+            </div>
+            
+            <div class="collapse show input-card" th:id="'collapseCardExample'+${categoryGroup.id}">
+              <div class="card-body">
+              <form action="#" th:action="@{/saveNewCategory}" th:object="${newCategory}" method="post">
+              <div class="card-input-submit">
+              <input class="category-input" type="text" th:field="*{name}"/>
+              <input type="hidden" th:name="id" th:id="id" th:value="${categoryGroup.id}"  />
+              <button class="button" type="submit">Dodaj novu kategoriju</button>
+              </div>
+              </form>
+              </div>
+            </div>
+          </div>
+          
+          <div class="card shadow mb-4">
+            <!-- Card Header - Accordion -->    
+            <div class="d-block card-header py-3" role="button" aria-expanded="true">
+              <form action="#" th:action="@{/saveNewPrimaryCategoryGroup}" th:object="${newCategoryGroup}" method="post">
+              <div class="card-input-submit">
+              <input class="category-input" type="text" th:field="*{name}"/>
+              <button class="button" type="submit">Dodaj primarnu grupu</button>
+              </div>
+              </form>
+            </div>
+          </div>
+          
+          </td>
+          <td width="50%" class="column-container" id="secondary-category-column">
+          <!-- Secondary Category Group Cards -->
+          <div th:each="categoryGroup: ${SecondryCategoryGroups}" class="card shadow mb-4">
+            <!-- Card Header - Accordion -->
+            <div style="display: flex;justify-content: center;">
+            <a th:href="'#collapseCardExample'+${categoryGroup.id}" class="d-block card-header py-3" style="width:100%" data-toggle="collapse" role="button" aria-expanded="true" th:aria-controls="'collapseCardExample'+${categoryGroup.id}">
+              <div th:text="${categoryGroup.name}" class="m-0 font-weight-bold text-primary"></div>
+            </a>
+            <a th:href="@{'/deleteCategoryGroup/' + ${categoryGroup.id}}" style="padding-top:25px" class="far fa-trash-alt d-block card-header py-3"></a>
+            </div>
+            <!-- Card Content - Collapse -->
+            <div th:each="group, iter: ${categoryGroup.categories}" class="collapse show card-header" th:classappend="${iter.getIndex()  % 2} ? 'even-card-header' : 'odd-card-header'" th:id="'collapseCardExample'+${categoryGroup.id}">
+              <div th:text="${group.name}" class="card-body">
+              </div>
+              <a th:href="@{'/deleteCategory/' + ${group.id}}" class="far fa-trash-alt"></a>
+            </div>
+            
+            <div class="collapse show input-card" th:id="'collapseCardExample'+${categoryGroup.id}">
+              <div class="card-body">
+              <form action="#" th:action="@{/saveNewCategory}" th:object="${newCategory}" method="post">
+              <div class="card-input-submit">
+              <input class="category-input" type="text" th:field="*{name}"/>
+              <input type="hidden" th:name="id" th:id="id" th:value="${categoryGroup.id}"  />
+              <button class="button" type="submit">Dodaj novu kategoriju</button>
+              </div>
+              </form>
+              </div>
+            </div>
+          </div>
+          
+          <div class="card shadow mb-4">
+            <!-- Card Header - Accordion -->    
+            <div class="d-block card-header py-3" role="button" aria-expanded="true">
+              <form action="#" th:action="@{/saveNewSecondaryCategoryGroup}" th:object="${newCategoryGroup}" method="post">
+              <div class="card-input-submit">
+              <input class="category-input" type="text" th:field="*{name}"/>
+              <input type="hidden" name="type" id="type" value="2"  />
+              <button class="button" type="submit">Dodaj sekundarnu grupu</button>
+              </div>
+              </form>
+            </div>
+          </div>
+		
+		</td>
+		</tr>
+		</tbody>
+		</table>
+        
+        </div>
+        <!-- /.container-fluid -->
+
+      </div>
+      <!-- End of Main Content -->
+
+      <!-- Footer -->
+      <footer class="sticky-footer bg-white">
+        <div class="container my-auto">
+          <div class="copyright text-center my-auto">
+            <span>Copyright &copy; Your Website 2020</span>
+          </div>
+        </div>
+      </footer>
+      <!-- End of Footer -->
+
+    </div>
+    <!-- End of Content Wrapper -->
+
+  </div>
+  <!-- End of Page Wrapper -->
+
+  <!-- Scroll to Top Button-->
+  <a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+  </a>
+
+  <!-- Bootstrap core JavaScript-->
+  <script src="vendor/jquery/jquery.min.js"></script>
+  <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Core plugin JavaScript-->
+  <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+
+  <!-- Custom scripts for all pages-->
+  <script src="js/sb-admin-2.min.js"></script>
+
+  <!-- Page level plugins -->
+  <script src="vendor/chart.js/Chart.min.js"></script>
+
+  <!-- Page level custom scripts -->
+  <script src="js/demo/chart-area-demo.js"></script>
+  <script src="js/demo/chart-pie-demo.js"></script>
+
+</body>
+
+</html>

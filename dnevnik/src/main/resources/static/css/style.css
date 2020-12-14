@@ -1,0 +1,132 @@
+.Row {
+    display: table;
+}
+.Column {
+    display: table-cell;
+}
+
+.sidebar-label {
+    color: rgb(255, 255, 255);
+}
+
+.card-header {
+    background-color: #CCCCCF;
+}
+
+.odd-card-header {
+    background-color: #EEEEEF;
+}
+
+.even-card-header {
+    background-color: #FFFFFF;
+}
+
+.button {
+  background-color: #4CAF50;
+  border: none;
+  color: white;
+  padding: 4px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+}
+
+.button:hover {
+    box-shadow: none;
+    background-color: #46a049;
+} 
+    
+.category-input {
+    width:400px;
+    height:33px;
+} 
+
+.card-input-submit {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+.priority-card-input-submit {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    margin-left: 1.25rem;
+}
+
+.priority-card a{
+	padding:5px;
+}
+
+.priority-container {
+	width:500px;
+	height: 100%;
+}
+
+.input-card {
+	background-color: #DEDEDE;
+}
+
+.card-header {
+	display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.navbar-brand {
+	margin-left: 50px;
+    margin-right: 60px;
+}
+
+.activity-table {
+	margin-top: 30px;
+}
+
+.sidebar-button {
+	margin-left: 55px;
+	margin-bottom: 30px;
+	background-color: #00d0ff;
+}
+
+.sidebar-button:hover {
+	background-color: #00a1c5;
+}
+
+.visible {
+  visibility: visible;
+}
+.invisible {
+  visibility: hidden;
+  position: absolute; 
+  left: -999em;
+}
+
+#primary-category-column {
+	padding-left: 100px;
+	padding-right: 100px;
+}
+
+#secondary-category-column {
+	padding-left: 100px;
+	padding-right: 100px;
+}
+
+.link-button {
+	background: none; 
+	color: #4e73df; 
+	border: none; 
+	padding: 0; 
+	font: inherit; 
+	cursor: pointer; 
+	outline: inherit;
+}
+
+.link-button:hover {
+	color: #224abe;
+    text-decoration: underline;
+}
